@@ -1,0 +1,154 @@
+Problem:
+
+Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
+
+
+First i need to know how to square a number but it seems to be already implemented:
+
+(square 3)
+=> 9
+
+
+So now i need to calculate the largest two of three numbers.
+
+I want something like
+(sum-of-largest-two 1 2 3)
+to return 5
+
+I basically want to discard the 1. Because it is smaller than the other two.
+
+I could therefore just turn the 1 to 0.
+(+ 0 2 3)
+
+Maybe a procedure called 'nullify' that turns the smallest number to 0.
+
+(define (nullify x y z)
+  (if (and (< x y) (< x z)) 0 x)
+)
+
+Let's test it:
+
+(nullify 1 2 3)
+=> 0
+
+(nullify 2 3 1)
+=> 2
+
+Good. It seems to work.
+
+
+So a sum of x, y and z where the smallest is nullified is
+
+(define (sum-of-largest-two x y z)
+  (+ (nullify x y z) (nullify y x z) (nullify z x y))
+)
+
+Try it out:
+
+(sum-of-largest-two 1 2 3)
+=> 5
+
+(sum-of-largest-two 5 1 10)
+=> 15
+
+(sum-of-largest-two 33 29 23)
+=> 62
+
+
+For those examples it works but what about these two:
+
+(sum-of-largest-two 5 5 5)
+=> 15
+
+(sum-of-largest-two 5 4 4)
+=> 13
+
+FAIL!
+
+There is no smaller one so they all get included.
+
+
+What if i'm doing this completely the wrong way.
+Perhaps i just need to add the largest of the first two with the largest of the second and third. That could work.
+
+(define (largest-number x y)
+  (if (> x y) x y)
+)
+
+(define (sum-of-largest-two x y z)
+  (+ (largest-number x y) (largest-number y z))
+)
+
+
+Try it out:
+
+(sum-of-largest-two 1 2 3)
+=> 5
+
+(sum-of-largest-two 5 1 10)
+=> 15
+
+(sum-of-largest-two 33 29 23)
+=> 62
+
+
+Good. And now the two which were previously wrong:
+
+(sum-of-largest-two 5 5 5)
+=> 10
+
+(sum-of-largest-two 5 4 4)
+=> 9
+
+
+YAY!
+
+What about:
+
+(sum-of-largest-two 0 0 0)
+=> 0
+
+Okay!
+
+(sum-of-largest-two 'hello' 'kitty' 3)
+;The object (quote kitty), passed as the second argument to integer-less?, is not the correct type.
+;To continue, call RESTART with an option number:
+; (RESTART 2) => Specify an argument to use in its place.
+; (RESTART 1) => Return to read-eval-print level 1.
+
+Heh! Didn't think that would work!
+
+
+Oh wait, i completely forgot i'm supposed to be doing the sum of the SQUARES of the two largest numbers.
+
+This is not too bad.
+
+(define (sum-of-squares-of-largest-two x y z)
+  (+ (square (largest-number x y)) (square (largest-number y z)))
+)
+
+
+Test it:
+
+(sum-of-squares-of-largest-two 1 2 3)
+=> 13
+
+(sum-of-squares-of-largest-two 7 -24 0)
+=> 49
+
+(sum-of-squares-of-largest-two 3 3 3)
+=> 18
+
+
+Hooray! :)
+
+
+FINAL ANSWER
+
+(define (largest-number x y)
+  (if (> x y) x y)
+)
+
+(define (sum-of-squares-of-largest-two x y z)
+  (+ (square (largest-number x y)) (square (largest-number y z)))
+)
