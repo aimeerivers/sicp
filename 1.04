@@ -1,0 +1,28 @@
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+)
+
+The test of whether b is greater than 0 decides whether the operator will be a plus or minus.
+
+If b is greater than 0 then we add b to a.
+
+If b is less than zero then we substract b from a.
+
+Since b is a negative number it is equivalent to adding the abs value of b to a.
+
+It is rather awesome that the operator can be decided by a compound expression.
+
+
+Some experiments to see if i'm right:
+
+(a-plus-abs-b 3 4)
+=> 7
+
+(a-plus-abs-b 3 -4)
+=> 7
+
+(a-plus-abs-b -3 -4)
+=> 1
+
+(a-plus-abs-b 3 0)
+=> 3
