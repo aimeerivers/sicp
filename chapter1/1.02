@@ -1,0 +1,43 @@
+Problem:
+
+(5 + 4 + (2 - (3 - (6 + (4 / 5))))) / (3 * (6 - 2) * (2 - 7))
+
+
+How i would work it out:
+
+(5 + 4 + (2 - (3 - 6.8))) / (3 * 4 * -5)
+
+= (5 + 4 + (2 - -3.8)) / -60
+
+= (5 + 4 + (2 + 3.8)) / -60
+
+= (5 + 4 + 5.8) / -60
+
+= 14.8 / -60
+
+= −0.246666 recurring
+
+
+Translated into scheme:
+
+I will take the most inner calculations first and check them as i go.
+
+(6 + (4 / 5) becomes (+ 6 (/ 4 5)) which produces 6.8
+(3 * (6 - 2) * (2 - 7) becomes (* 3 (- 6 2) (- 2 7)) which produces -60
+
+(3 - (6 + (4 / 5))) becomes (- 3 (+ 6 (/ 4 5))) which produces -3.8
+
+(2 - (3 - (6 + (4 / 5)))) becomes (- 2 (- 3 (+ 6 (/ 4 5)))) which produces 5.8
+
+(5 + 4 + (2 - (3 - (6 + (4 / 5))))) becomes (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) which produces 14.8
+
+putting it all together:
+
+(5 + 4 + (2 - (3 - (6 + (4 / 5))))) / (3 * (6 - 2) * (2 - 7))
+becomes
+(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7)))
+which produces
+-0.246666 recurring
+
+
+I just noticed that the big division becomes the most significant part of the expression and the two halves become the two operands.

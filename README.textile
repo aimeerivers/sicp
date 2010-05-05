@@ -1,0 +1,5 @@
+h2. Structure and Interpretation of Computer Programs
+
+My work through the exercises of "the MIT SICP course":http://mitpress.mit.edu/sicp/
+
+Putting it on github just because i put all my programming work on github and it seems to make sense to put it where people can follow my progress if they wish.
