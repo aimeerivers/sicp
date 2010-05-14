@@ -1,0 +1,78 @@
+
+Starting functions for calculating the square root ...
+
+
+(define (average x y) (/ (+ x y) 2))
+
+(define (improve guess x) (average guess (/ x guess)))
+
+(define (good-enough? guess x) (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x) x)))
+
+(define (sqrt x) (sqrt-iter 1.0 x))
+
+
+Trying out the new-if function ...
+
+(define (new-if predicate then-clause else-clause)
+  (cond (predicate then-clause)
+    (else else-clause)))
+
+1 ]=> (new-if (= 2 3) 0 5)
+
+;Value: 5
+
+1 ]=> (new-if (= 1 1) 0 5)
+
+;Value: 0
+
+yay! it works!!
+
+
+Now for the tricky one, rewrite the square root program to use new-if. What happens?
+
+
+(define (sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x) x)))
+
+1 ]=> (sqrt 25)
+
+;Aborting!: maximum recursion depth exceeded
+
+
+Let's see if it's to do with defining our own function or to do with using the cond.
+
+(define (test-if predicate then-clause else-clause)
+  (if predicate then-clause else-clause))
+
+(define (sqrt-iter guess x)
+  (test-if (good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x) x)))
+
+1 ]=> (test-if (= 2 3) 1 0)
+
+;Value: 0
+
+1 ]=> (sqrt 25)
+
+;Aborting!: maximum recursion depth exceeded
+
+
+So it's something to do with having defined our own function. But what?
+
+Is it because it hasn't yet returned from the calling function but it's still within the else clause?
+
+But even (sqrt 1) doesn't work!
+
+
+
+After a quick search on google (!) we find that it has something to do with normal order vs applicative order.
+
+I guess it is applying the new-if function in normal order, which means it is calculating both of the operands pasesd to new-if. Since one of them uses sqrt-iter which requires new-if, it gets stuck in and endless loop and overflows the stack.
