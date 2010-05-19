@@ -1,0 +1,117 @@
+Exercise 1.7
+
+The good-enough? function determines whether the number produced, when squared, is less than 0.001 different from the original number. This is not very good for very small numbers.
+
+For example:
+
+The square root of 0.00158 should be 0.03975
+
+But with our function (sqrt 0.00158) we get 0.046517
+
+This number, squared, gives 0.00216 which is only 0.00058 different from the original number so the good-enough? function decides that it is good enough. Yet for such a small number, the error margin is greater. The answer is actually 17% higher than it should be.
+
+
+
+Very large numbers have a different problem. It takes a long time to get from the first guess of 1 to a close enough guess, especially if the right answer needs a lot of decimal places.
+
+The function can very easily calculate (sqrt 15241578750190520) and instantly produces the correct answer of 123456789.
+
+But the (sqrt 230598034958089) gives it a lot more trouble. I've been waiting a few minutes and nothing so far. My computer is starting to make some funny noises ...!
+
+
+
+So let's define a good-enough? function that checks how the guess changes from one iteration to the next.
+
+(define (good-enough? this-guess last-guess)
+  (and
+    (> (/ last-guess this-guess) 0.999)
+    (< (/ last-guess this-guess) 1.001)))
+
+The sqrt-iter guess will need to tell good-enough? the previous guess.
+
+(define (sqrt-iter guess x previous-guess)
+  (if (good-enough? guess previous-guess)
+    guess
+    (sqrt-iter (improve guess x) x guess)))
+
+The sqrt function will need to invent a pretend previous guess. I suppose it may as well be 0. My brain is raising red flags to do with division by zero, but it's the first guess we need to worry about, and we'll keep that as 1.
+
+(define (sqrt x) (sqrt-iter 1.0 x 0.0))
+
+
+
+Okay, how's this?
+
+1 ]=> (sqrt 9)
+
+;Value: 3.000000001396984
+
+
+Good, that's the easy one. Now how about that very large number.
+
+1 ]=> (sqrt 230598034958089)
+
+;Value: 15185455.355679914
+
+
+Instantaneous result and no scary whirring of the fan! However, it's not quite the number given by my calculator. Let's try for a little more accuracy.
+
+
+(define (good-enough? this-guess last-guess)
+  (and
+    (> (/ last-guess this-guess) 0.99999)
+    (< (/ last-guess this-guess) 1.00001)))
+
+
+1 ]=> (sqrt 230598034958089)
+
+;Value: 15185454.716869343
+
+
+Perfect! Very fast, and the exact same number given by the calculator.
+
+
+
+Now to the very small number.
+
+
+1 ]=> (sqrt 0.00158)
+
+;Value: .03974921382870358
+
+
+Very nice! And an even smaller number ...?
+
+
+1 ]=> (sqrt 0.000000034871) 
+
+;Value: 1.8673778408043477e-4
+
+
+Extremely fast, and it also appears to be extremely accurate!
+
+
+
+
+FINAL ANSWER
+
+
+
+(define (average x y) (/ (+ x y) 2))
+
+(define (improve guess x) (average guess (/ x guess)))
+(define (good-enough? this-guess last-guess)
+  (and
+    (> (/ last-guess this-guess) 0.99999)
+    (< (/ last-guess this-guess) 1.00001)))
+
+(define (sqrt-iter guess x previous-guess)
+  (if (good-enough? guess previous-guess)
+    guess
+    (sqrt-iter (improve guess x) x guess)))
+
+(define (sqrt x) (sqrt-iter 1.0 x 0.0))
+
+
+
+(just don't ask for the square root of 0)
