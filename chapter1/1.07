@@ -100,6 +100,7 @@ FINAL ANSWER
 (define (average x y) (/ (+ x y) 2))
 
 (define (improve guess x) (average guess (/ x guess)))
+
 (define (good-enough? this-guess last-guess)
   (and
     (> (/ last-guess this-guess) 0.99999)
